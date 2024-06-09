@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cow Management Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/chart.js" rel="stylesheet">
+<style>
+  /* Your existing styles */
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Cow Management Dashboard</h1>
+  <div class="last-updated" id="lastUpdated"></div>
+</div>
+<div class="dashboard">
+  <div class="widget">
+    <h2>Cows in Heat</h2>
+    <canvas id="heatChart"></canvas>
+  </div>
+  <div class="widget" style="height: 600px;width: 600px;">
+    <h2>Health Alerts</h2>
+    <div class="row">
+      <div class="column left" style="background-color:#ffe6e6;">
+        <div class="sick">
+          <br>
+          <div>
+            <p>Total sick cows </p>
+            <p><strong><b>3 cows</b></strong></p>
+            <span class="alert-numbers"><p> 3 new in 24h </p></span>
+          </div>
+          <div>Mastitis Infected <span class="alert-numbers">3/6</span></div>
+          <div class="progress-bar" style="padding-left: 0px;">
+            <div class="progress red"></div>
+          </div>
+          <div>Healthy <span class="alert-numbers">3/3</span></div>
+          <div class="progress-bar" style="padding-left: 0px;">
+            <div class="progress gray"></div>
+          </div>
+        </div>
+      </div>
+      <div class="column right" style="background-color:#ffe6e6">
+        <div class="temp">
+          <p>Temperature</p>
+          <canvas id="tempChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Cow123')">Cow123</button>
+        <button class="tablinks" onclick="openCity(event, 'Cow234')">Cow234</button>
+        <button class="tablinks" onclick="openCity(event, 'Cow567')">Cow567</button>
+        <button class="tablinks" onclick="openCity(event, 'Cow789')">Cow789</button>
+        <button class="tablinks" onclick="openCity(event, 'Cow967')">Cow967</button>
+      </div>
+      <div id="Cow123" class="tabcontent" style="height: 150px; background-color:aliceblue;">
+        <iframe src="force_plot.html" style="width:100%; height:300px; border:none;"></iframe>
+      </div>
+      <div id="Cow234" class="tabcontent" style="height: 150px;background-color:aliceblue;">
+        <iframe src="force_plot_1.html" style="width:100%; height:300px; border:none;"></iframe>
+      </div>
+      <div id="Cow567" class="tabcontent" style="height: 150px;background-color:aliceblue;">
+        <iframe src="force_plot4.html" style="width:100%; height:300px; border:none;"></iframe>
+      </div>
+      <div id="Cow789" class="tabcontent" style="height: 150px;background-color:aliceblue;">
+        <iframe src="force_plot5.html" style="width:100%; height:300px; border:none;"></iframe>
+      </div>
+      <div id="Cow967" class="tabcontent" style="height: 150px;background-color:aliceblue;">
+        <iframe src="force_plot6.html" style="width:100%; height:300px; border:none;"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="widget" style="height: 600px;">
+    <h2>Fertility Insights</h2>
+    <canvas id="fertilityChart"></canvas>
+  </div>
+</div>
+<div class="footer">
+  <div>
+    <img src="digitalfarming.png" alt="Digital Farming Logo" style="width: 300px;">
+    <img src="RPTU_logo.svg" alt="RPTU Logo" style="width: 100px;">
+    <h2>Chair of Digital Farming</h2>
+    <h3>Prof. Dr.-Ing. Jörg Dörr</h3>
+    <h4>M.Sc. Mengisti Berihu</h4>
+  </div>
+  <div class="text">
+    <h5>Developed by Shaheen Khan<br>
+    RPTU Kaiserslautern, 2024</h5>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const heatCtx = document.getElementById('heatChart').getContext('2d');
+  const fertilityCtx = document.getElementById('fertilityChart').getContext('2d');
+  const tempCtx = document.getElementById('tempChart').getContext('2d');
+
+  const heatChart = new Chart(heatCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Early', 'Conventional', 'Late'],
+      datasets: [{
+        label: 'Cows in Heat',
+        data: [5, 5, 6],
+        backgroundColor: ['green']
+      }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+
+  const fertilityChart = new Chart(fertilityCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Suspected for Abortion', 'Irregular Heats', 'No Heat After Calving', 'Possible Pregnant'],
+      datasets: [{
+        label: 'Fertility Status',
+        data: [2, 2, 3, 1],
+        backgroundColor: ['red', 'orange', 'grey', 'green']
+      }]
+    }
+  });
+
+  const tempChart = new Chart(tempCtx, {
+    type: 'line',
+    data: {
+      labels: ['1', '2 ', '3', '4','5','6'],
+      datasets: [{
+        label: 'Cow123',
+        data: [26, 29, 38, 41, 45, 53],
+        borderColor:"red",
+        fill:false
+      },{
+        label: 'Cow234',
+        data: [32, 32, 38, 36, 42, 50],
+        borderColor:"green",
+        fill:false
+      }]
+    }
+  });
+
+  function updateLastUpdated() {
+    const now = new Date();
+    const lastUpdatedElement = document.getElementById('lastUpdated');
+    lastUpdatedElement.innerText = 'Last updated: ' + now.toLocaleString();
+  }
+
+  updateLastUpdated(); // Update on load
+  setInterval(updateLastUpdated, 60000); // Update every minute
+
+  function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+</script>
+</body>
+</html>
